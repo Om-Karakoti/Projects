@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: paytm-merchant-growth-backend
+    env: python
+    region: oregon
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: DATABASE_URL
+        fromDatabase:
+          name: paytm-postgres
+          property: connectionString
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: ENVIRONMENT
+        value: production
+
+databases:
+  - name: paytm-postgres
+    plan: free
+    region: oregon
+    databaseName: paytm_growth_ai
+    user: paytm_user
